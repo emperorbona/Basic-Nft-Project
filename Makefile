@@ -10,7 +10,7 @@ all: clean remove install update build
 clean  :; forge clean
 
 # Remove modules
-remove :; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "modules"
+# remove :; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "modules"
 
 install :; forge install cyfrin/foundry-devops@0.2.2  && forge install foundry-rs/forge-std@v1.8.2  && forge install openzeppelin/openzeppelin-contracts@v5.0.2 
 
@@ -21,7 +21,7 @@ build:; forge build
 
 test :; forge test 
 
-zktest :; foundryup-zksync && forge test --zksync && foundryup
+# zktest :; foundryup-zksync && forge test --zksync && foundryup
 
 snapshot :; forge snapshot
 
@@ -29,4 +29,19 @@ format :; forge fmt
 
 anvil :; anvil -m 'test test test test test test test test test test test junk' --steps-tracing --block-time 1
 
-NETWORK_ARGS := --rpc-url http://127.0.0.1:8545 --private-key $(DEFAULT_ANVIL_KEY) --broadcast
+NETWORK_ARGS := --rpc-url http://localhost:8545 --private-key $(DEFAULT_ANVIL_KEY) --broadcast --ffi
+
+deploy:
+	@forge script script/DeployBasicNft.s.sol:DeployBasicNft $(NETWORK_ARGS)
+
+mint:
+	@forge script script/Interactions.s.sol:MintBasicNft ${NETWORK_ARGS}
+
+deployMood:
+	@forge script script/DeployMoodNft.s.sol:DeployMoodNft $(NETWORK_ARGS)
+
+mintMoodNft:
+	@forge script script/Interactions.s.sol:MintMoodNft $(NETWORK_ARGS)
+
+flipMoodNft:
+	@forge script script/Interactions.s.sol:FlipMoodNft $(NETWORK_ARGS)
